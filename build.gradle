@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 27
@@ -28,6 +29,7 @@ repositories {
     flatDir {
         dirs = ['../libs']
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -44,4 +46,5 @@ dependencies {
     implementation (name: 'WirelessP2p-release', ext:'aar')
     implementation (name: 'tfod-release', ext:'aar')
     implementation (name: 'tensorflow-lite-0.0.0-nightly', ext:'aar')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
