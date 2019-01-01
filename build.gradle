@@ -47,5 +47,8 @@ dependencies {
     implementation (name: 'tensorflow-lite-0.0.0-nightly', ext:'aar')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    implementation 'com.github.cretz.asmble:asmble-compiler:0.4.0'
+    implementation 'com.github.cretz.asmble:asmble-annotations:0.4.0'
+
     implementation 'org.openftc:rev-extensions-2:1.1'
 }
