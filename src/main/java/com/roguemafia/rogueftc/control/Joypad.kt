@@ -2,7 +2,7 @@ package com.roguemafia.rogueftc.control
 
 import com.qualcomm.robotcore.hardware.Gamepad
 
-data class JoypadConfig(
+data class JoypadConfig (
         val joystickDeadzone: Double = 0.2,
         val triggerDeadzone: Double = 0.0,
         val callback: JoypadCallback = object : JoypadCallback {
