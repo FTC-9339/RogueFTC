@@ -1,6 +1,6 @@
 package com.roguemafia.rogueftc.robot
 
-class RogueBot {
+class Robot {
 
     internal constructor() {
 
@@ -9,8 +9,8 @@ class RogueBot {
     class Builder {
         var isBenchTest: Boolean = false
 
-        fun createRobot(): RogueBot {
-            return RogueBot()
+        fun createRobot(): Robot {
+            return Robot()
         }
     }
 }

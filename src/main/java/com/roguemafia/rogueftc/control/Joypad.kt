@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.hardware.Gamepad
 data class JoypadConfig(
         val joystickDeadzone: Double = 0.2,
         val triggerDeadzone: Double = 0.0,
-        val callback: () -> Unit = {
-            // Empty as default
+        val callback: JoypadCallback = object : JoypadCallback {
+            override fun callback(joypadState: JoypadState) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
         }
 )
 
@@ -53,10 +55,14 @@ class Joypad(private var config: JoypadConfig = JoypadConfig(), gamepad: Gamepad
                 )
         )
 
-        config.callback
+        config.callback.callback(currentState)
     }
 
     private val ourGamepad: Gamepad = Gamepad(callback)
+
+    init {
+        ourGamepad.copy(gamepad)
+    }
 
     internal fun getGamepad(): Gamepad = ourGamepad
 
@@ -76,7 +82,7 @@ data class JoypadState(
 )
 
 interface JoypadCallback {
-    open fun callback(joypadState: JoypadState)
+    fun callback(joypadState: JoypadState)
 }
 
 data class JoystickState(

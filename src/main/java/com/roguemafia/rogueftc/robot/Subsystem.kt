@@ -4,11 +4,11 @@ import com.qualcomm.robotcore.robot.RobotState
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 interface Subsystem {
-    open fun init()
+    fun init()
 
-    open fun active(state: RobotState)
+    fun active(state: RobotState)
 
-    open fun shutdown()
+    fun shutdown()
 }
 
 data class SubsystemCommand(val commandType: String, val command: JvmType.Object)
