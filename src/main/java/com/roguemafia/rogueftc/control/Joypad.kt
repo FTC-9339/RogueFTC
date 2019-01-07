@@ -12,7 +12,7 @@ data class JoypadConfig (
         }
 )
 
-class Joypad(private var config: JoypadConfig = JoypadConfig(), gamepad: Gamepad) {
+/*class Joypad(private var config: JoypadConfig = JoypadConfig(), gamepad: Gamepad) {
 
     private var callback: Gamepad.GamepadCallback = Gamepad.GamepadCallback {
         val previousState = currentState
@@ -72,7 +72,7 @@ class Joypad(private var config: JoypadConfig = JoypadConfig(), gamepad: Gamepad
 
     fun getCurrentState() = currentState
 }
-
+*/
 data class JoypadState(
         val left_stick: JoystickState = JoystickState(),
         val right_stick: JoystickState = JoystickState(),
