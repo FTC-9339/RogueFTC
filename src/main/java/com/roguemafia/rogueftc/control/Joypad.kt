@@ -9,32 +9,60 @@ import kotlin.math.abs
 data class JoypadConfig (
         val joystickDeadzone: Double = 0.2,
         val triggerDeadzone: Double = 0.0,
-        val callback: JoypadState.() -> Unit = {}
+        val callback: (JoypadState) -> Unit = {}
 )
 
 class Joypad(private var config: JoypadConfig = JoypadConfig()) {
-    
-    fun updateFromGamepad(gamepad: Gamepad) {
-        val previousState = currentState
+
+    fun updateFromGamepad(gamepad: Gamepad): JoypadState {
+        if (previousGamepad == gamepad) return currentState
+
+        previousGamepad = gamepad
 
         currentState = gamepad.run {
             JoypadState(
-                    left_stick = JoystickState(
-                            x = left_stick_x.toDouble(),
-                            y = left_stick_y.toDouble(),
-                            clickyBoi = currentState.left_stick.clickyBoi.update(left_stick_button)
+                    left_stick = currentState.left_stick.update(
+                            left_stick_x.toDouble(),
+                            left_stick_y.toDouble(),
+                            left_stick_button,
+                            config.joystickDeadzone
                     ),
-                    right_stick = JoystickState(
-                            x = right_stick_x.toDouble(),
-                            y = right_stick_y.toDouble(),
-                            clickyBoi = currentState.right_stick.clickyBoi.update(right_stick_button)
+                    right_stick = currentState.right_stick.update(
+                            right_stick_x.toDouble(),
+                            right_stick_y.toDouble(),
+                            right_stick_button,
+                            config.joystickDeadzone
                     ),
-                    dPadButtons =
+                    faceButtons = currentState.faceButtons.update(
+                            a,
+                            b,
+                            x,
+                            y
+                    ),
+                    dPadButtons = currentState.dPadButtons.update(
+                            dpad_up,
+                            dpad_down,
+                            dpad_left,
+                            dpad_right
+                    ),
+                    triggerBumperState = currentState.triggerBumperState.update(
+                            left_trigger.toDouble(),
+                            right_trigger.toDouble(),
+                            left_bumper,
+                            right_bumper,
+                            config.triggerDeadzone
+                    )
             )
         }
+
+        config.callback(currentState)
+
+        return currentState
     }
 
-    private var currentState: JoypadState = JoypadState()
+    private var previousGamepad = Gamepad()
+
+    private var currentState = JoypadState()
 
     fun changeConfig(newConfig: JoypadConfig) {config = newConfig}
 
@@ -51,7 +79,8 @@ data class JoypadState(
 data class JoystickState(
         val x: Double = 0.0,
         val y: Double = 0.0,
-        val clickyBoi: ButtonState = ButtonState.NOT_PRESSED
+        val clickyBoi: ButtonState = ButtonState.NOT_PRESSED,
+        val active: Boolean = false
 ) {
     fun update(x: Double, y: Double, clickyBoi: Boolean, deadzone: Double) =
             JoystickState(
@@ -65,7 +94,8 @@ data class JoystickState(
                     } else {
                         y
                     },
-                    clickyBoi = this.clickyBoi.update(clickyBoi)
+                    clickyBoi = this.clickyBoi.update(clickyBoi),
+                    active = x != 0.0 || y != 0.0 || clickyBoi
             )
 }
 
@@ -121,7 +151,7 @@ data class TriggerState(
 ) {
     fun update(value: Double, deadzone: Double) =
             TriggerState(
-                    value = if (value < deadzone) 0.0 else value,
+                    value = if (abs(value) < deadzone) 0.0 else value,
                     deadzone = deadzone
             )
 }
@@ -132,4 +162,11 @@ data class TriggerBumperState(
     val leftBumper: ButtonState = ButtonState.NOT_PRESSED,
     val rightBumper: ButtonState = ButtonState.NOT_PRESSED
 ) {
+    fun update(left_trigger: Double, right_trigger: Double, leftBumper: Boolean, rightBumper: Boolean, triggerDeadzone: Double) =
+            TriggerBumperState(
+                    left_trigger = this.left_trigger.update(left_trigger, triggerDeadzone),
+                    right_trigger = this.right_trigger.update(right_trigger, triggerDeadzone),
+                    leftBumper = this.leftBumper.update(leftBumper),
+                    rightBumper = this.rightBumper.update(rightBumper)
+            )
 }
