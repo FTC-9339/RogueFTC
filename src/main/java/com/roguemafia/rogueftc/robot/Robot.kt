@@ -3,16 +3,14 @@ package com.roguemafia.rogueftc.robot
 
 class Robot {
 
-    internal constructor() {
+    internal constructor(builder: Builder) {
 
     }
 
-    class Builder {
-        var isBenchTest: Boolean = false
-
-        fun create(lambda: Builder.() -> Unit): Robot {
-            lambda
-            return Robot()
+    data class Builder(var robotName: String) {
+        operator fun invoke(block: Builder.() -> Unit): Robot {
+            block
+            return Robot(this)
         }
     }
 }
