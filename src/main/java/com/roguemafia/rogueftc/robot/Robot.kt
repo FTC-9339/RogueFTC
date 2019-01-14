@@ -7,9 +7,9 @@ class Robot {
 
     }
 
-    data class Builder(var robotName: String) {
+     class Builder {
         operator fun invoke(block: Builder.() -> Unit): Robot {
-            block
+            this.block()
             return Robot(this)
         }
     }
